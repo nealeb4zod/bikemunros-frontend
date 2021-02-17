@@ -21,7 +21,7 @@ function App() {
     const allPages = [];
     for (let i = 1; i < 16; i++) {
       allPages.push(
-        fetch(`https://api.bikemunros.co.uk/munros/page?page=${i}`)
+        fetch(`https://api.bikemunros.co.uk/api/munros/page?page=${i}`)
       );
     }
     Promise.all(allPages)
