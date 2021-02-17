@@ -1,33 +1,51 @@
-import React, { useEffect } from "react";
+import { Progress } from "@chakra-ui/react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useState } from "react/cjs/react.development";
 import ErrorPage from "../components/ErrorPage";
 import Header from "../components/Header";
 import MapComponent from "../components/MapComponent";
+import Munro from "../components/Munro";
+import MunroTable from "../components/MunroTable";
 import NavBar from "../components/NavBar";
 
-const MainContainer = () => {
-  const [munroList, setMunroList] = useState([]);
-
-  useEffect(() => {
-    fetch("https://bikemunros-backend.herokuapp.com/munros")
-      .then((res) => res.json())
-      .then((data) => {
-        setMunroList(data);
-      })
-      .then();
-  }, []);
-
+const MainContainer = ({ filteredMunroList, input, onChange }) => {
   return (
     <Router>
       <Header></Header>
       <NavBar></NavBar>
       <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => <MapComponent munroList={munroList} />}
-        />
+        {filteredMunroList ? (
+          <>
+            <Route
+              exact
+              path="/map"
+              render={() => (
+                <MapComponent
+                  filteredMunroList={filteredMunroList}
+                  input={input}
+                  onChange={onChange}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/list"
+              render={() => (
+                <MunroTable
+                  filteredMunroList={filteredMunroList}
+                  input={input}
+                  onChange={onChange}
+                />
+              )}
+            />
+            <Route
+              path="/munro/:id"
+              render={() => <Munro munroList={filteredMunroList} />}
+            />
+          </>
+        ) : (
+          <Progress size="xs" isIndeterminate />
+        )}
 
         <Route component={ErrorPage} />
       </Switch>
